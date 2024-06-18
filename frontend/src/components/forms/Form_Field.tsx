@@ -3,11 +3,19 @@ import { faCheck, faTimes, faInfoCircle } from '@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
-const Cadastro_User : React.FC = () => {
+interface FormInfo{
+    id: string;
+    value: string;
+    label: string;
+}
+
+const Form_Field : React.FC<FormInfo> = (id, label) => {
 
     return(
-        <></>
+        <>
+        
+        </>
     )
 };
 
-export default Cadastro_User;
+export default Form_Field;
