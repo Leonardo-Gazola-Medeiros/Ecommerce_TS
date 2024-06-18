@@ -1,25 +1,17 @@
-import { Routes, Route} from "react-router-dom"
-import { Container } from "react-bootstrap"
-import Cadastro_User from "./pages/cadastro/Cadastro_User"
-import Cadastro_Item from "./pages/cadastro/Cadastro_Item"
-import Home from "./pages/home/Home"
-import LoginPage from "./pages/login/Login"
-import { Navbar } from "./components/Navbar"
-import { ShoppingCartProvider } from "./context/ShoppingCartContext"
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import Login from './components/Login';
+import Cadastro from './components/Cadastro';
+import Home from './components/Home';
 
-function App() {
-    return(
-        <ShoppingCartProvider>
-            <Container className="mb-4">
-                <Routes>
-                    <Route path="/" element={<LoginPage />} />
-                    <Route path="/register" element={<Cadastro_User />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/cadastro-item" element={<Cadastro_Item />} />
-                </Routes>
-            </Container>
-        </ShoppingCartProvider>
-    )
-}
+const App: React.FC = () => {
+    return (
+        <Switch>
+            <Route exact path="/" component={Login} />
+            <Route path="/cadastro" component={Cadastro} />
+            <Route path="/home" component={Home} />
+        </Switch>
+    );
+};
 
-export default App
+export default App;
