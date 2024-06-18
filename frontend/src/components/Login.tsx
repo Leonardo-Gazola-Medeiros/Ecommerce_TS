@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Login: React.FC = () => {
     const [usuario, setUsuario] = useState('');
     const [senha, setSenha] = useState('');
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3000/login', { usuario, senha });
             alert(response.data.message);
-            history.push('/home');
+            navigate('/home');
         } catch (error) {
             alert('Usuário ou senha incorretos');
         }

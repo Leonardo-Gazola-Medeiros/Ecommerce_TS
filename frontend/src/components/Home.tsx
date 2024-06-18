@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface Item {
     id: string;
@@ -14,6 +15,7 @@ interface Item {
 const Home: React.FC = () => {
     const [items, setItems] = useState<Item[]>([]);
     const [search, setSearch] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchItems = async () => {
@@ -27,9 +29,16 @@ const Home: React.FC = () => {
         item.nome.toLowerCase().includes(search.toLowerCase()) && item.quantidade > 0
     );
 
+    const handleCadastroClick = () => {
+        navigate('/cadastro');
+    };
+
     return (
         <div>
             <h1>Items Disponíveis</h1>
+            <div>
+                <button onClick={handleCadastroClick}>Cadastrar Novo Item</button>
+            </div>
             <input
                 type="text"
                 placeholder="Buscar por nome do item..."

@@ -1,1 +1,13 @@
-[]
+[{
+    "id": "1",
+    "nome": "Placa Numero um",
+    "foto": "Link da foto",
+    "descricao": "Descrição",
+    "valorCompra": 10,
+    "valorVenda": 20,
+    "quantidade": 110,
+    "estoqueMinimo": 10,
+    "categoria": "Porção",
+    "localEstoque": "Aqui",
+    "informacoes": "Informações"
+}]
