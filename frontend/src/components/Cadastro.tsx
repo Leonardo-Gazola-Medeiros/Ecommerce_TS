@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Cadastro: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -44,11 +45,19 @@ const Cadastro: React.FC = () => {
         }
     };
 
+    const redirecionar = useNavigate();
+
+
+    const irHome = () => {
+        redirecionar('/home');
+    };
+
     return (
         <div>
             <h1>Cadastro de Itens</h1>
+            <button onClick={irHome}>Voltar a Home</button>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="id">ID do item:</label>
+                <label htmlFor="id">ID:</label>
                 <input
                     type="text"
                     id="id"
@@ -58,7 +67,7 @@ const Cadastro: React.FC = () => {
                     required
                 />
                 <br />
-                <label htmlFor="nome">Nome do item:</label>
+                <label htmlFor="nome">Nome:</label>
                 <input
                     type="text"
                     id="nome"
@@ -68,7 +77,7 @@ const Cadastro: React.FC = () => {
                     required
                 />
                 <br />
-                <label htmlFor="foto">Foto Ilustrativa do item:</label>
+                <label htmlFor="foto">Foto:</label>
                 <input
                     type="text"
                     id="foto"
@@ -78,7 +87,7 @@ const Cadastro: React.FC = () => {
                     required
                 />
                 <br />
-                <label htmlFor="descricao">Descrição do Item:</label>
+                <label htmlFor="descricao">Descrição:</label>
                 <textarea
                     id="descricao"
                     name="descricao"
@@ -87,7 +96,7 @@ const Cadastro: React.FC = () => {
                     required
                 />
                 <br />
-                <label htmlFor="valorCompra">Valor de compra:</label>
+                <label htmlFor="valorCompra">Valor:</label>
                 <input
                     type="number"
                     id="valorCompra"
@@ -107,7 +116,7 @@ const Cadastro: React.FC = () => {
                     required
                 />
                 <br />
-                <label htmlFor="quantidade">Quantidade em Estoque:</label>
+                <label htmlFor="quantidade">Estoque:</label>
                 <input
                     type="number"
                     id="quantidade"
@@ -151,7 +160,7 @@ const Cadastro: React.FC = () => {
                     required
                 />
                 <br />
-                <label htmlFor="informacoes">Informações em geral:</label>
+                <label htmlFor="informacoes">Informações:</label>
                 <textarea
                     id="informacoes"
                     name="informacoes"
