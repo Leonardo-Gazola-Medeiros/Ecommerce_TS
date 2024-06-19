@@ -1,53 +1,74 @@
 const express = require('express');
-const fs = require('fs');
 const bodyParser = require('body-parser');
+const connection = require('./database');
 const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
+const port = 3000;
 
-app.use(bodyParser.json());
+// Habilitar CORS para todas as origens
 app.use(cors());
 
-const ITEMS_FILE = './items.json';
-
-// Função para ler os items do arquivo JSON
-const readItems = () => {
-    if (!fs.existsSync(ITEMS_FILE)) {
-        return [];
-    }
-    const data = fs.readFileSync(ITEMS_FILE);
-    return JSON.parse(data);
-};
-
-// Função para salvar os items no arquivo JSON
-const writeItems = (items) => {
-    fs.writeFileSync(ITEMS_FILE, JSON.stringify(items, null, 2));
-};
+app.use(bodyParser.json());
 
 app.post('/login', (req, res) => {
     const { usuario, senha } = req.body;
-    // Simples verificação de login (apenas para fins de exemplo)
-    if (usuario === 'admin' && senha === 'admin') {
-        res.status(200).send({ message: 'Login bem-sucedido' });
-    } else {
-        res.status(401).send({ message: 'Usuário ou senha incorretos' });
-    }
+    connection.query('SELECT * FROM users WHERE usuario = ? AND senha = ?', [usuario, senha], (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err);
+            res.status(500).send('Erro no servidor');
+            return;
+        }
+        if (results.length > 0) {
+            res.send({ message: 'Login bem-sucedido!' });
+        } else {
+            res.status(401).send({ message: 'Usuário ou senha incorretos' });
+        }
+    });
 });
 
-app.post('/cadastro', (req, res) => {
-    const newItem = req.body;
-    const items = readItems();
-    items.push(newItem);
-    writeItems(items);
-    res.status(201).send(newItem);
+// Endpoint para criar um usuário (para fins de teste)
+app.post('/register', (req, res) => {
+    const { usuario, senha } = req.body;
+    connection.query('INSERT INTO users (usuario, senha) VALUES (?, ?)', [usuario, senha], (err, results) => {
+        if (err) {
+            console.error('Error inserting into the database:', err);
+            res.status(500).send('Erro no servidor');
+            return;
+        }
+        res.send({ message: 'Usuário registrado com sucesso!' });
+    });
 });
 
 app.get('/items', (req, res) => {
-    const items = readItems();
-    res.status(200).send(items);
+    connection.query('SELECT * FROM items', (err, results) => {
+        if (err) {
+            console.error('Error querying the database:', err);
+            res.status(500).send('Erro no servidor');
+            return;
+        }
+        res.send(results);
+    });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+app.post('/items', (req, res) => {
+    const {
+        nome, foto, descricao, valorCompra, valorVenda,
+        quantidade, estoqueMinimo, categoria, localEstoque, informacoes
+    } = req.body;
+    connection.query('INSERT INTO items (nome, foto, descricao, valor_compra, valor_venda, quantidade, estoque_minimo, categoria, local_estoque, informacoes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [nome, foto, descricao, valorCompra, valorVenda, quantidade, estoqueMinimo, categoria, localEstoque, informacoes],
+        (err, results) => {
+            if (err) {
+                console.error('Error inserting into the database:', err);
+                res.status(500).send('Erro no servidor');
+                return;
+            }
+            res.send({ message: 'Item cadastrado com sucesso!' });
+        }
+    );
+});
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
 });

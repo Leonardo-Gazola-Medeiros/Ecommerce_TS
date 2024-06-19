@@ -5,6 +5,7 @@ import axios from 'axios';
 const Login: React.FC = () => {
     const [usuario, setUsuario] = useState('');
     const [senha, setSenha] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -13,8 +14,12 @@ const Login: React.FC = () => {
             const response = await axios.post('http://localhost:3000/login', { usuario, senha });
             alert(response.data.message);
             navigate('/home');
-        } catch (error) {
-            alert('Usuário ou senha incorretos');
+        } catch (error: any) {
+            if (error.response && error.response.data && error.response.data.message) {
+                setErrorMessage(error.response.data.message);
+            } else {
+                setErrorMessage('Erro no servidor');
+            }
         }
     };
 
@@ -42,6 +47,7 @@ const Login: React.FC = () => {
                 <br />
                 <button type="submit">Login</button>
             </form>
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         </div>
     );
 };

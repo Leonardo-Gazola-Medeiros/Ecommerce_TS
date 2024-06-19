@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar';
+import './css/Home.css';
 
 interface Item {
     id: string;
     nome: string;
     foto: string;
     descricao: string;
-    valorVenda: number;
+    valor_venda: number | undefined;
     quantidade: number;
     categoria: string;
 }
@@ -15,12 +16,15 @@ interface Item {
 const Home: React.FC = () => {
     const [items, setItems] = useState<Item[]>([]);
     const [search, setSearch] = useState('');
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchItems = async () => {
-            const response = await axios.get('http://localhost:3000/items');
-            setItems(response.data);
+            try {
+                const response = await axios.get('http://localhost:3000/items');
+                setItems(response.data);
+            } catch (error) {
+                console.error('Error fetching items:', error);
+            }
         };
         fetchItems();
     }, []);
@@ -29,32 +33,30 @@ const Home: React.FC = () => {
         item.nome.toLowerCase().includes(search.toLowerCase()) && item.quantidade > 0
     );
 
-    const handleCadastroClick = () => {
-        navigate('/cadastro');
-    };
-
     return (
-        <div>
-            <h1>Items Disponíveis</h1>
-            <div>
-                <button onClick={handleCadastroClick}>Cadastrar Novo Item</button>
-            </div>
-            <input
-                type="text"
-                placeholder="Buscar por nome do item..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-            />
-            <div>
-                {filteredItems.map(item => (
-                    <div key={item.id} className="item">
-                        <h2>{item.nome}</h2>
-                        <img src={item.foto} alt={item.nome} />
-                        <p>{item.descricao}</p>
-                        <p>R$ {item.valorVenda}</p>
-                        <p>Categoria: {item.categoria}</p>
-                    </div>
-                ))}
+        <div className="home-container">
+            <Navbar />
+            <div className="content">
+                <h1>Items Disponíveis</h1>
+                <input
+                    type="text"
+                    placeholder="Buscar por nome do item..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+                <div className="items-grid">
+                    {filteredItems.map(item => (
+                        <div key={item.id} className="item-card">
+                            <img src={item.foto} alt={item.nome} />
+                            <h2>{item.nome}</h2>
+                            <p>{item.descricao}</p>
+                            <p className="price">
+                                R$ {item.valor_venda}
+                            </p>
+                            <p>Categoria: {item.categoria}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
